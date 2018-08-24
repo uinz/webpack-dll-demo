@@ -1,0 +1,38 @@
+{
+  "presets": [
+    "@babel/preset-react",
+    [
+      "@babel/preset-env",
+      {
+        "modules": false,
+        "targets": {
+          "browsers": ["last 2 Chrome versions"]
+        }
+      }
+    ]
+  ],
+  "plugins": [
+    [
+      "@babel/plugin-proposal-decorators",
+      {
+        "legacy": true
+      }
+    ],
+    "@babel/plugin-proposal-optional-chaining"
+  ],
+  "env": {
+    "development": {
+      "plugins": ["react-hot-loader/babel", "emotion"]
+    },
+    "production": {
+      "plugins": [
+        [
+          "emotion",
+          {
+            "extractStatic": true
+          }
+        ]
+      ]
+    }
+  }
+}
