@@ -2,6 +2,7 @@ const webpack = require("webpack");
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const ScriptExtHtmlWebpackPlugin = require("script-ext-html-webpack-plugin");
 const { dir } = require("./helper");
 
@@ -13,27 +14,83 @@ const config = {
     path: dir("dist")
   },
   module: {
-    rules: [
-      {
-        test: /\.jsx?$/,
-        loader: "babel-loader",
-        options: {
-          cacheDirectory: true
-        }
-      }
-    ]
+    rules: []
   },
   resolve: {
     alias: {
-      '@': dir('src'),
+      "@": dir("src")
     }
+  },
+  plugins: []
+};
+
+const babelRule = {
+  test: /\.jsx?$/,
+  loader: "babel-loader",
+  options: {
+    cacheDirectory: true,
+    presets: [
+      "@babel/preset-react",
+      [
+        "@babel/preset-env",
+        {
+          modules: false,
+          targets: {
+            browsers: ["last 2 Chrome versions"]
+          }
+        }
+      ]
+    ],
+    plugins: [
+      [
+        "@babel/plugin-proposal-decorators",
+        {
+          legacy: true
+        }
+      ],
+      "@babel/plugin-proposal-optional-chaining"
+    ]
   }
+};
+
+const cssRule = {
+  test: /\.css$/,
+  use: ["css-loader"]
 };
 
 module.exports = (_, { mode }) => {
   const dllManifest = require(dir("dll", `manifest_${mode}.json`));
 
-  config.plugins = [
+  if (mode === "devolopment") {
+    /* ====================== DEVOLOPMENT ====================== */
+
+    config.output.filename = `[name]_${mode}.js`;
+    config.plugins.unshift(new webpack.HotModuleReplacementPlugin());
+    config.devServer = {
+      hot: true,
+      port: 8080,
+      contentBase: dir("dist")
+    };
+
+    cssRule.use.unshift("style-loader");
+
+    babelRule.options.plugins.unshift("react-hot-loader/babel");
+    babelRule.options.plugins.push("emotion");
+  } else if (mode === "production") {
+    /* ====================== PRODUCTION ====================== */
+
+    config.output.filename = `[name]_${mode}_[hash].js`;
+    config.plugins.push(
+      new MiniCssExtractPlugin({
+        filename: "[name]_[chunkhash].css",
+        chunkFilename: "[id]_[chunkhash].css"
+      })
+    );
+    cssRule.use.unshift({ loader: MiniCssExtractPlugin.loader });
+    babelRule.options.plugins.push(["emotion", { extractStatic: true }]);
+  }
+
+  config.plugins.push(
     new webpack.DllReferencePlugin({
       context: ".",
       manifest: dllManifest
@@ -41,7 +98,7 @@ module.exports = (_, { mode }) => {
     new HtmlWebpackPlugin({
       template: dir("src/index.html"),
       dll: `${dllManifest.name}.js`,
-      inject: false,
+      inject: false
     }),
     new CopyWebpackPlugin([
       {
@@ -52,19 +109,10 @@ module.exports = (_, { mode }) => {
     new ScriptExtHtmlWebpackPlugin({
       defaultAttribute: "async"
     })
-  ];
+  );
 
-  if (mode === "devolopment") {
-    config.output.filename = `[name]_${mode}.js`;
-    config.plugins.unshift(new webpack.HotModuleReplacementPlugin());
-    config.devServer = {
-      hot: true,
-      port: 8080,
-      contentBase: dir("dist")
-    };
-  } else if (mode === "production") {
-    config.output.filename = `[name]_${mode}_[hash].js`;
-  }
+  config.module.rules.push(babelRule);
+  config.module.rules.push(cssRule);
 
   return config;
 };
