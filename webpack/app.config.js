@@ -97,7 +97,15 @@ module.exports = (_, { mode }) => {
     new HtmlWebpackPlugin({
       template: dir("src/index.html"),
       dll: `${dllManifest.name}.js`,
-      inject: false
+      inject: false,
+      minify: {
+        minifyCSS: true,
+        minifyJS: true,
+        minifyURLs: true,
+        removeComments: true,
+        removeAttributeQuotes: true,
+        collapseWhitespace: true
+      }
     }),
     new CopyWebpackPlugin([
       {
