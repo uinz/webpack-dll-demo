@@ -13,42 +13,21 @@ const config = {
     path: dir("dist")
   },
   module: {
-    rules: []
+    rules: [
+      {
+        test: /\.jsx?$/,
+        loader: "babel-loader",
+        options: {
+          cacheDirectory: true
+        }
+      }
+    ]
   },
+  plugins: [],
   resolve: {
     alias: {
       "@": dir("src")
     }
-  },
-  plugins: []
-};
-
-const babelRule = {
-  test: /\.jsx?$/,
-  loader: "babel-loader",
-  options: {
-    cacheDirectory: true,
-    presets: [
-      "@babel/preset-react",
-      [
-        "@babel/preset-env",
-        {
-          modules: false,
-          targets: {
-            browsers: ["last 2 Chrome versions"]
-          }
-        }
-      ]
-    ],
-    plugins: [
-      [
-        "@babel/plugin-proposal-decorators",
-        {
-          legacy: true
-        }
-      ],
-      "@babel/plugin-proposal-optional-chaining"
-    ]
   }
 };
 
@@ -62,7 +41,6 @@ module.exports = (_, { mode }) => {
 
   if (mode === "development") {
     /* ====================== DEVELOPMENT ====================== */
-
     config.output.filename = `[name]_${mode}.js`;
     config.plugins.unshift(new webpack.HotModuleReplacementPlugin());
     config.devServer = {
@@ -72,10 +50,6 @@ module.exports = (_, { mode }) => {
     };
 
     cssRule.use.unshift("style-loader");
-
-    babelRule.options.plugins.unshift("react-hot-loader/babel");
-    babelRule.options.plugins.push("emotion");
-    console.log('babelRule.options.plugins.push("emotion");')
   } else if (mode === "production") {
     /* ====================== PRODUCTION ====================== */
 
@@ -87,7 +61,6 @@ module.exports = (_, { mode }) => {
       })
     );
     cssRule.use.unshift({ loader: MiniCssExtractPlugin.loader });
-    babelRule.options.plugins.push(["emotion", { extractStatic: true }]);
   }
 
   config.plugins.push(
