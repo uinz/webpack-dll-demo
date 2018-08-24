@@ -60,8 +60,8 @@ const cssRule = {
 module.exports = (_, { mode }) => {
   const dllManifest = require(dir("dll", `manifest_${mode}.json`));
 
-  if (mode === "devolopment") {
-    /* ====================== DEVOLOPMENT ====================== */
+  if (mode === "development") {
+    /* ====================== DEVELOPMENT ====================== */
 
     config.output.filename = `[name]_${mode}.js`;
     config.plugins.unshift(new webpack.HotModuleReplacementPlugin());
@@ -75,6 +75,7 @@ module.exports = (_, { mode }) => {
 
     babelRule.options.plugins.unshift("react-hot-loader/babel");
     babelRule.options.plugins.push("emotion");
+    console.log('babelRule.options.plugins.push("emotion");')
   } else if (mode === "production") {
     /* ====================== PRODUCTION ====================== */
 
