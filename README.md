@@ -97,6 +97,7 @@ import App from "./components/App";
 ReactDOM.render(<App />, document.getElementById("app-root"));
 ```
 
+
 这样 html 首次只会加载 `main.js` (虽然webpack 打包后会加入模块代码, 会增加到有2KB左右)
 加载完 2KB 的 `main.js` 的时间应该是可以容忍的, 这个时候 loading 就可以动起来了.
 然后 `main.js` 再异步按需并行加载其他 js 比如 vendor(160KB 我也就打包常用的一些库)
@@ -105,3 +106,6 @@ ReactDOM.render(<App />, document.getElementById("app-root"));
 
 要说不足的话, 如果平白无故多出了 1个 http 请求, 必然也会有性能影响,
 不过 react 现在一般都有 100多KB 的, 比较起来还是可以的.
+
+
+以上说的大小 都是文件大小, 没计算 gzip;
