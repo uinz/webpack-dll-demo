@@ -115,6 +115,9 @@ ReactDOM.render(<App />, document.getElementById("app-root"));
 
 ![image](https://user-images.githubusercontent.com/12208108/44659271-33dede80-aa36-11e8-9099-fce3f66b7c12.png)
 
+![image](https://user-images.githubusercontent.com/12208108/44660183-7950db00-aa39-11e8-8853-0395ebbb7441.png)
+
+
 [DEMO 地址在这里](https://uinz.github.io/webpack-dll-demo/) 建议开启 network throttling 限制 1kb/s, 不然你可能看不到loaidng 🤪
 
 
