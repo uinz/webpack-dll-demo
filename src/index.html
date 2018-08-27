@@ -5,9 +5,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <% for (var css in htmlWebpackPlugin.files.css) { %>
-    <link href="<%= htmlWebpackPlugin.files.css[css].path %>" rel="stylesheet">
-  <% } %>
   <title>WEBPACK DLL • DEMO</title>
 </head>
 
@@ -43,30 +40,11 @@
         </g>
       </svg>
     </div>
-
   </app-root>
 
-  <script>
-    /* js 加载会阻塞 gif svg 的动画, 使用异步加载来解决这个问题 */
-    setTimeout(load, 0);
-    function load() {
-      const jsEntries = <%= JSON.stringify(htmlWebpackPlugin.files.js) %>;
-      const vendor = { path: "<%= htmlWebpackPlugin.options.dll %>" };
-      loadScript(vendor).then(loadEntry);
-      function loadEntry() {
-        jsEntries.forEach(loadScript)
-      }
-      function loadScript(data) {
-        return new Promise((resolve, reject) => {
-          const js = document.createElement('SCRIPT')
-          js.src = data.path;
-          document.head.appendChild(js);
-          js.onload = resolve;
-          js.onerror = reject;
-        })
-      }
-    }
-  </script>
+  <% if (htmlWebpackPlugin.options.vendor) { %>
+    <script src="<%= htmlWebpackPlugin.options.vendor %>"></script>
+  <% } %>
 </body>
 
 </html>

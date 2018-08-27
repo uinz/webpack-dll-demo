@@ -12,6 +12,7 @@
     ]
   ],
   "plugins": [
+    "@babel/plugin-syntax-dynamic-import",
     ["emotion", { "extractStatic": true }],
     [
       "@babel/plugin-proposal-decorators",
@@ -21,7 +22,7 @@
     ],
     "@babel/plugin-proposal-optional-chaining"
   ],
-  "dev": {
+  "env": {
     "development": {
       "plugins": ["react-hot-loader/babel"]
     }
