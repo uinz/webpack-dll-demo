@@ -34,7 +34,7 @@ htmlWebpackPlugin.options.files.js.forEach(js => loadScript(js.path))
 
 // 串行加载
 (async () => {
-  for (js of htmlWebpackPlugin.options.files.js) {
+  for (let js of htmlWebpackPlugin.options.files.js) {
     await loadScript(js.path);
   }
 })();
