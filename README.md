@@ -19,7 +19,8 @@
 
 由于 SPA 的 js 文件一般都很大, 所以加载 js 时候提供 loading 能一定程度上提高用户体验,
 
-但是有一个很严重的问题: js 在同步加载的时候会阻塞 `<svg>` `gif` 的动画, 你的 loading 看起来就像个傻子
+但是有一个很严重的问题: js 在同步加载的时候会阻塞 `svg` `css animation` 还是 `gif` 的动画,
+你的 loading 看起来就像个傻子
 
 自然而然想到使用 异步加载js的方式
 
@@ -111,7 +112,13 @@ ReactDOM.render(<App />, document.getElementById("app-root"));
 以上说的大小 都是文件大小, 没计算 gzip;
 
 
-
 ![image](https://user-images.githubusercontent.com/12208108/44659271-33dede80-aa36-11e8-9099-fce3f66b7c12.png)
 
 (DEMO 地址)[https://uinz.github.io/webpack-dll-demo/] 建议开启 network throttling 限制 1kb/s
+
+
+### 总结
+其实就是把 动态import 做代码分割 之前在 router 层做的
+再放到 entry 实现了一次
+
+不管怎么说, 我的loading 转起来了
