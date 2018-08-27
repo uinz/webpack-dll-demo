@@ -30,7 +30,7 @@
 ```js
 
 // 并行加载
-htmlWebpackPlugin.options.files.js.map(js => loadScript(js.path))
+htmlWebpackPlugin.options.files.js.forEach(js => loadScript(js.path))
 
 // 串行加载
 for await(js of htmlWebpackPlugin.options.files.js) {
