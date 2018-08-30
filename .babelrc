@@ -12,15 +12,11 @@
     ]
   ],
   "plugins": [
+    "emotion",
     "@babel/plugin-syntax-dynamic-import",
-    ["emotion", { "extractStatic": true }],
-    [
-      "@babel/plugin-proposal-decorators",
-      {
-        "legacy": true
-      }
-    ],
-    "@babel/plugin-proposal-optional-chaining"
+    "@babel/plugin-proposal-optional-chaining",
+    ["@babel/plugin-proposal-decorators", { "legacy": true }],
+    ["@babel/plugin-proposal-class-properties", { "loose": true }]
   ],
   "env": {
     "development": {

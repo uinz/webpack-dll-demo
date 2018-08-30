@@ -18,10 +18,14 @@ const Container = styled.div`
 
 @hot(module)
 class App extends React.Component {
+  handleClick = () => {
+    this.props.upload(1);
+  };
+
   render() {
     return (
       <Container>
-        <Slider>Hello Word!</Slider>
+        <Slider>Hello React</Slider>
       </Container>
     );
   }

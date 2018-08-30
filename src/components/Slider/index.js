@@ -48,43 +48,46 @@ const Fg = styled(animated.div)`
 
 @withGesture
 class Slider extends React.Component {
-  render() {
+  renderItem = ({ x }) => {
     const { xDelta, down, children } = this.props;
+    const bubbleStyle = {
+      justifySelf: xDelta < 0 ? "end" : "start",
+      transform: x
+        .interpolate({
+          map: Math.abs,
+          range: [50, 300],
+          output: [0.5, 1],
+          extrapolate: "clamp"
+        })
+        .interpolate(x => `scale(${x})`)
+    };
+
+    const fgStyle = {
+      transform: x.interpolate(x => `translate3d(${x}px,0,0)`)
+    };
+    const child =
+      down && Math.abs(xDelta) > 50
+        ? xDelta < 0
+          ? "Cancel"
+          : "Accept"
+        : children;
 
     return (
-      <Spring
-        native
-        to={{ x: down ? xDelta : 0 }}
-        immediate={name => down && name === "x"}
-      >
-        {({ x }) => (
-          <Item style={{ backgroundColor: xDelta < 0 ? "#FF1C68" : "#14D790" }}>
-            <Bubble
-              style={{
-                transform: x
-                  .interpolate({
-                    map: Math.abs,
-                    range: [50, 300],
-                    output: [0.5, 1],
-                    extrapolate: "clamp"
-                  })
-                  .interpolate(x => `scale(${x})`),
-                justifySelf: xDelta < 0 ? "end" : "start"
-              }}
-            />
-            <Fg
-              style={{
-                transform: x.interpolate(x => `translate3d(${x}px,0,0)`)
-              }}
-            >
-              {down && Math.abs(xDelta) > 50
-                ? xDelta < 0
-                  ? "Cancel"
-                  : "Accept"
-                : children}
-            </Fg>
-          </Item>
-        )}
+      <Item style={{ backgroundColor: xDelta < 0 ? "#FF1C68" : "#14D790" }}>
+        <Bubble style={bubbleStyle} />
+        <Fg style={fgStyle}>{child}</Fg>
+      </Item>
+    );
+  };
+
+  render() {
+    const { xDelta, down } = this.props;
+    const to = { x: down ? xDelta : 0 };
+    const immediate = name => down && name === "x";
+
+    return (
+      <Spring native to={to} immediate={immediate}>
+        {this.renderItem}
       </Spring>
     );
   }

@@ -1,4 +1,3 @@
-// const webpack = require("webpack");
 const HappyPack = require("happypack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { dir } = require("./helper");
